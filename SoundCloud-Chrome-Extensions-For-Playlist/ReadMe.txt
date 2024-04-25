@@ -1,5 +1,8 @@
 Guide d’utilisation de l’extension SoundCloud Playlist : 
 
+!!!-IMPORTANT-!!! IL FAUT ABSOLUMENT AVOIR UN COMPTE SOUNDCLOUD ET ETRE CO
+
+
 Prévoir un lien sur votre playlist 
 
 
@@ -22,6 +25,8 @@ Ne pas hésiter à refresh et remettre play si ca ne marche pas
 ------------------------------------------------------------------------------------------------
 
 SoundCloud Playlist extension user guide : 
+
+!!! IMPORTANT !!! SOUNDCLOUD ACCOUNT NEEDED AND LOGED
 
 Provide a link to your playlist 
 
