@@ -17,7 +17,7 @@ Prévoir un lien sur votre playlist
 
 Ne pas hésiter à refresh et remettre play si ca ne marche pas 
 
-
+!!! IMPORTANT !!! ESSAYER D'AVOIR DES ADRESSES IP DIFFERENTES ET DIFFERENTS COMPTES
 
 ------------------------------------------------------------------------------------------------
 
@@ -39,3 +39,5 @@ Provide a link to your playlist
 
 
 Don't hesitate to refresh and play again if it doesn't work. 
+
+!!! IMPORTANT !!! TRY TO HAVE DIFFERENTS IP ADRESS AND DIFFERENT ACCOUNTS
