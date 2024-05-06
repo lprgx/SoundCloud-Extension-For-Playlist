@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soundcloud track Skipper</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Soundcloud auto skipper</h1>
+
+    <form method="dialog">
+        <label for="active">
+            Enable auto skipping ?
+            <input type="checkbox" name="active" id="active">
+        </label>
+        <label for="skipTm">
+            Skip timeout (in seconds)
+            <input type="number" name="skipTm" id="skipTm" min="5" max="60">
+        </label>
+    </form>
+    <script src="../js/utils/settings.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

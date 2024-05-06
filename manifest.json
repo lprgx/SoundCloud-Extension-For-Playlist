@@ -1,0 +1,26 @@
+{
+	"$schema": "https://json.schemastore.org/chrome-manifest",
+	"manifest_version": 3,
+	"name": "Soundcloud Track Skipper",
+	"description": "Extention pour skipper de track régulièrement",
+	"version": "1.0",
+	"content_scripts": [
+		{
+			"matches": [
+				"https://soundcloud.com/*",
+				"https://*.soundcloud.com/*"
+			],
+			"js": ["js/utils/settings.js", "js/content.js"]
+		}
+	],
+	"background": {
+		"js": ["js/utils/settings.js", "js/background.js"]
+	},
+	"action": {
+		"default_title": "Ouvrir les paramètres d'extention",
+		"default_popup": "popup/index.html"
+	},
+	"permissions": [
+		"storage"
+	]
+}
