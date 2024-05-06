@@ -42,11 +42,12 @@ async function startAutoSkipping(player) {
     const desactive = () => active = false;
     const tick = () => {
         if(!active) return
+        console.log("[AUTO-SKIPPER]> Track skipped");
         skipTrack(player)
         setTimeout(() => tick(), generateTimoutNumber(
             settings.timeoutInSeconds - settings.randomnessInSeconds,
             settings.timeoutInSeconds + settings.randomnessInSeconds
-        ))
+        ) * 1000)
     }
 
     tick()
