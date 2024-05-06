@@ -32,7 +32,7 @@ function skipTrack(player) {
 
 /**
  * @param {HTMLDivElement} player 
- * @returns {() => void} A function to stop the auto-skipping process
+ * @returns {Promise<() => void>} A function to stop the auto-skipping process
  */
 async function startAutoSkipping(player) {
     let active = true;
@@ -54,6 +54,18 @@ async function startAutoSkipping(player) {
     return desactive
 }
 
+chrome.runtime.onMessage.addListener(async (message, _, answer) => {
+    const { id, data } = message
+    switch (id) {
+        case "reloadSettings":
+            console.log("Settings reloaded!");
+            reload()
+            break;
+        default:
+            break;
+    }
+})
+
 async function main() {
     /**
      * @type {null | () => null}
@@ -64,19 +76,11 @@ async function main() {
      * @type {null | HTMLDivElement}
      */
     let existingPlayer = document.querySelector(".playControls");
-    if(existingPlayer) desactivateSkipping = startAutoSkipping(existingPlayer);
 
-    chrome.runtime.onMessage.addListener(async (message, _, answer) => {
-        const { id, data } = message
-        switch (id) {
-            case "settingsUpdated":
-            case "reloadSettings":
-                settings= await getSettings();
-                break;
-            default:
-                break;
-        }
-    })
+    const reload = async () => {
+        desactivateSkipping?.()
+        if(existingPlayer) desactivateSkipping = await startAutoSkipping()
+    }
 
     const observer = new MutationObserver((records) => {
         for(const record of records) {
@@ -91,11 +95,14 @@ async function main() {
             const playerAdded = Array.from(record.addedNodes).find(isElementPlayControls);
             if(playerAdded) {
                 playerElement= playerAdded
-                desactivateSkipping = startAutoSkipping(playerAdded)
+                reload()
             };
         }
     })
     observer.observe(document.getElementById("app"), {childList: true});
+    reload()
+
+    return reload
 }
 
-main()
+const reload = main()

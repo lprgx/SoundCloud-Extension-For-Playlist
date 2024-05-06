@@ -3,25 +3,20 @@ const enabledInput = form.querySelector("input#active");
 const timeoutInput = form.querySelector("input#skipTm");
 const randomnessInput = form.querySelector("input#randomness")
 
-/**
- * @param {keyof ReturnType<typeof getSettings>} name 
- */
-async function changeSettingsProp(name, value) {
-    await setSettingsProperty(name, value);
+async function settingsHasBeenUpdated() {
+    const tabs = await chrome.tabs.query({
+        url: "*://*.soundcloud.com/*"
+    })
 
-    return chrome.runtime.sendMessage({id: "settingsUpdated", data: {
-        name, value
-    }})
-}
-function settingsHasBeenUpdated() {
-    return chrome.runtime.sendMessage({id: "reloadSettings"})
+    return await Promise.all(tabs.map((tab) => (
+        chrome.tabs.sendMessage(tab.id, {id: "reloadSettings"})
+    )))
 }
 /**
  * 
  * @param {ReturnType<typeof getSettings>} settings 
  */
 async function changeSettings(settings) {
-    console.log(settings);
     await setSettings(settings);
     return settingsHasBeenUpdated();
 }
@@ -30,7 +25,6 @@ chrome.runtime.onMessage.addListener(async (message, _, answer) => {
     const { id, data } = message
 
     switch (id) {
-        case "settingsUpdated":
         case "reloadSettings":
             syncFormWithSettings()
             break;
