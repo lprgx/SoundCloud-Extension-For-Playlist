@@ -1,37 +1,16 @@
 const form = document.querySelector("form");
 const enabledInput = form.querySelector("input#active");
 const timeoutInput = form.querySelector("input#skipTm");
-const randomnessInput = form.querySelector("input#randomness")
+const randomnessInput = form.querySelector("input#randomness");
 
-async function settingsHasBeenUpdated() {
-    const tabs = await chrome.tabs.query({
-        url: "*://*.soundcloud.com/*"
-    })
-
-    return await Promise.all(tabs.map((tab) => (
-        chrome.tabs.sendMessage(tab.id, {id: "reloadSettings"})
-    )))
-}
 /**
  * 
  * @param {ReturnType<typeof getSettings>} settings 
  */
 async function changeSettings(settings) {
     await setSettings(settings);
-    return settingsHasBeenUpdated();
+    return ExtentionPopup.message("reloadSettings");
 }
-
-chrome.runtime.onMessage.addListener(async (message, _, answer) => {
-    const { id, data } = message
-
-    switch (id) {
-        case "reloadSettings":
-            syncFormWithSettings()
-            break;
-        default:
-            break;
-    }
-})
 
 /**
  * 
@@ -63,4 +42,21 @@ form.addEventListener("change", () => {
     isSync(false)
 })
 
+ExtentionPopup.onMessage((message) => {
+    const { id, data, from } = message
+    console.log(`Received message ${id} from ${from}. Data:`, data)
+
+    switch (id) {
+        case "reloadSettings":
+            syncFormWithSettings()
+            break;
+        case "skippingStatusUpdate":
+            changeState(data.active);
+            break;
+        case "changeIcon":
+            ExtentionPopup.changeIcon(data.icon);
+        default:
+            break;
+    }
+})
 syncFormWithSettings();
