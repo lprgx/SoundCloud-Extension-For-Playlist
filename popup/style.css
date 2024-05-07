@@ -52,3 +52,12 @@ label {
     align-items: center;
     justify-content: space-between;
 }
+
+a {
+    color: inherit;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+}

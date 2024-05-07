@@ -90,7 +90,7 @@ class SoundCloudAutoSkipper {
     stopAutoSkipping() {
         this.#skippingActive= false;
         SoundCloudAutoSkipper.Debug("Auto-Skipping has been stopped.");
-        ExtentionContent.changeIcon("pause");
+        ExtentionContent.changeIcon("icon");
     }
     async startAutoSkipping() {
         if(this.#skippingActive) this.stopAutoSkipping();

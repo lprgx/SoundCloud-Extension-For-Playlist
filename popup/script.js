@@ -29,14 +29,20 @@ async function syncFormWithSettings() {
     isSync(true)
 }
 
-form.addEventListener("change", () => {
+form.addEventListener("input", () => {
+    const timeoutInSeconds = parseInt(timeoutInput.value);
+    const randomnessInSeconds = parseInt(randomnessInput.value);
+    if(
+        isNaN(timeoutInSeconds)
+        || isNaN(randomnessInSeconds)
+    ) return;
+
     /**
      * @type {typeof defaultSettings}
      */
     const newSettings = {
         enabled: enabledInput.checked,
-        timeoutInSeconds: parseInt(timeoutInput.value),
-        randomnessInSeconds: parseInt(randomnessInput.value)
+        timeoutInSeconds, randomnessInSeconds
     }
     changeSettings(newSettings)
     isSync(false)
