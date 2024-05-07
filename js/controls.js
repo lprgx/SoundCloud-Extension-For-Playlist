@@ -19,7 +19,7 @@ class Controls {
         /**
          * @type {HTMLButtonElement}
          */
-        this.skippingButton = player.querySelector(".skipControl")
+        this.skippingButton = player.querySelector(".skipControl__next")
         /**
          * @type {HTMLButtonElement}
          */
