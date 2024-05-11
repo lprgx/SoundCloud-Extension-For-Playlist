@@ -1,5 +1,5 @@
 function isUserLoginIn() {
-    !!document.querySelector(".header__userNavButton.header__userNavUsernameButton");
+    return !!document.querySelector(".header__userNavButton.header__userNavUsernameButton");
 }
 
 /**
@@ -93,7 +93,6 @@ class SoundCloudAutoSkipper {
         ExtentionContent.changeIcon("icon");
     }
     async startAutoSkipping() {
-        if(this.#skippingActive) this.stopAutoSkipping();
         this.#skippingActive= true;
         this.#newTimeout();
         ExtentionContent.changeIcon(this.playerControls.playerStatus === "playing" ? "active" : "pause")
@@ -109,6 +108,7 @@ class SoundCloudAutoSkipper {
 }
 
 function createSkipper() {
+    if(Skipper) deleteSkipper();
     Skipper = new SoundCloudAutoSkipper();
     return Skipper.reloadSettings();
 }
@@ -119,18 +119,19 @@ function deleteSkipper() {
     SoundCloudAutoSkipper.Debug("Auto-Skipper has been disabled.")
 }
 function tryCreateSkipper() {
+    if(!isUserLoginIn()) return deleteSkipper() || null;
+    
     try { createSkipper().then(() => {}) } 
     catch (e) { deleteSkipper() }
     return Skipper
 }
 
 const observer = new MutationObserver((records) => {
-    if(!isUserLoginIn) return ExtentionContent.changeIcon("icon");
-    
     for(const record of records) {
         if(
             Array.from(record.removedNodes)
             .find(isElementPlayControls)
+            || !isUserLoginIn()
         ) deleteSkipper();
         
         const playerAdded = Array.from(record.addedNodes).find(Controls.isPlayerElement);
@@ -151,5 +152,5 @@ ExtentionContent.onMessage(async (message) => {
             break;
     }
 })
-observer.observe(document.getElementById("app"), {childList: true, attributes: true});
-tryCreateSkipper()
+observer.observe(document.getElementById("app"), {childList: true});
+if(isUserLoginIn()) tryCreateSkipper()
