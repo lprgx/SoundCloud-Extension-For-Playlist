@@ -23,7 +23,6 @@ function isSync(value) {
 }
 async function syncFormWithSettings() {
     const settings = await getSettings()
-    console.log(settings);
     
     enabledInput.checked = settings.enabled
     timeoutInput.value = settings.timeoutInSeconds

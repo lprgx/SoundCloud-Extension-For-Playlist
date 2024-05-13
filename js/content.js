@@ -108,10 +108,7 @@ class SoundCloudAutoSkipper {
     }
 
     resetToRepeatPlaylist() {
-        while(this.playerControls.repeatType !== "playlist") {
-            console.log("clicked");
-            this.playerControls.repeatButton.click();
-        }
+        while(this.playerControls.repeatType !== "playlist") this.playerControls.repeatButton.click();
         SoundCloudAutoSkipper.Debug("Ajusted the repeat settings to set it as 'repeat all'.")
     }
 
