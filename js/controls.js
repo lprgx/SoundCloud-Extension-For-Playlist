@@ -25,6 +25,10 @@ class Controls {
          */
         this.playPauseButton = player.querySelector(".playControl")
         /**
+         * @type {HTMLButtonElement}
+         */
+        this.repeatButton = player.querySelector(".repeatControl")
+        /**
          * @type {HTMLDivElement}
          */
         this.timeline = player.querySelector(".playbackTimeline__progressWrapper")
@@ -36,6 +40,12 @@ class Controls {
     }
     get playerStatus() {
         return this.playPauseButton.classList.contains("playing") ? "playing" : "paused"
+    }
+    get repeatType() {
+        return (
+            this.repeatButton.classList.contains("m-none") ? "none" :
+            this.repeatButton.classList.contains("m-one") ? "song" : "playlist"
+        )
     }
     skipTrack() {
         this.skippingButton.click()

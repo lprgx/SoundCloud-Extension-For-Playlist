@@ -2,6 +2,7 @@ const form = document.querySelector("form");
 const enabledInput = form.querySelector("input#active");
 const timeoutInput = form.querySelector("input#skipTm");
 const randomnessInput = form.querySelector("input#randomness");
+const randomnessValue = document.querySelector(".currentRandomness");
 
 /**
  * 
@@ -9,6 +10,7 @@ const randomnessInput = form.querySelector("input#randomness");
  */
 async function changeSettings(settings) {
     await setSettings(settings);
+    syncFormWithSettings();
     return ExtentionPopup.message("reloadSettings");
 }
 
@@ -21,20 +23,25 @@ function isSync(value) {
 }
 async function syncFormWithSettings() {
     const settings = await getSettings()
+    console.log(settings);
     
     enabledInput.checked = settings.enabled
     timeoutInput.value = settings.timeoutInSeconds
     randomnessInput.value = settings.randomnessInSeconds
+    randomnessValue.innerText = randomnessInput.value
 
     isSync(true)
 }
 
 form.addEventListener("input", () => {
+    isSync(false)
     const timeoutInSeconds = parseInt(timeoutInput.value);
     const randomnessInSeconds = parseInt(randomnessInput.value);
     if(
         isNaN(timeoutInSeconds)
         || isNaN(randomnessInSeconds)
+        || timeoutInSeconds < parseInt(timeoutInput.getAttribute("min"))
+        || timeoutInSeconds > parseInt(timeoutInput.getAttribute("max"))
     ) return;
 
     /**
@@ -45,7 +52,10 @@ form.addEventListener("input", () => {
         timeoutInSeconds, randomnessInSeconds
     }
     changeSettings(newSettings)
+})
+form.addEventListener("reset", () => {
     isSync(false)
+    changeSettings({...defaultSettings})
 })
 
 ExtentionPopup.onMessage((message) => {
@@ -61,6 +71,7 @@ ExtentionPopup.onMessage((message) => {
             break;
         case "changeIcon":
             ExtentionPopup.changeIcon(data.icon);
+            break;
         default:
             break;
     }

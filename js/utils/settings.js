@@ -1,6 +1,6 @@
 const defaultSettings = {
     enabled: true,
-    timeoutInSeconds: 30,
+    timeoutInSeconds: 35,
     randomnessInSeconds: 5
 }
 const storage = chrome.storage.local

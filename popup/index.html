@@ -12,20 +12,26 @@
 
     <form method="dialog">
         <label for="active">
-            Enable auto skipping ?
+            <p>Enable auto skipping ?</p>
             <input type="checkbox" name="active" id="active">
         </label>
         <label for="skipTm">
-            Skip timeout (in seconds)
+            <p>Skip timeout (in seconds)</p>
             <input type="number" name="skipTm" id="skipTm" min="5" max="60">
         </label>
         <label for="randomness">
-            Randomness
+            <p>
+                Randomness (&plusmn; <span class="currentRandomness"></span>s.)
+            </p>
             <input type="range" name="randomness" id="randomness" min="0" max="30" step="0.5">
         </label>
+        <button type="reset">Reset settings</button>
     </form>
 
-    <p>Made with ❤️ by <a href="https://johan-janin.com" target="_blank">Johan</a>.</p>
+    <div id="credits">
+        <p>Made with ❤️ by <a href="https://johan-janin.com" target="_blank">Johan</a> and <a href="https://github.com/lprgx" target="_blank">Louis</a>.</p>
+        <p>See and install the extention on <a href="https://github.com/lprgx/SoundCloud-Extension-For-Playlist" target="_blank">Github</a>.</p>
+    </div>
     <script src="../js/utils/settings.js"></script>
     <script src="../js/utils/extention.js"></script>
     <script src="./script.js"></script>

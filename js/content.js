@@ -59,6 +59,13 @@ class SoundCloudAutoSkipper {
         this.#playPauseObserver.observe(this.playerControls.playPauseButton, {
             attributes: true
         })
+        this.playerControls.repeatButton.addEventListener("click", (ev) => {
+            if(
+                ev.isTrusted
+                && this.#skippingActive
+                && this.playerControls.repeatType !== "playlist"
+            ) this.resetToRepeatPlaylist();
+        })
 
         SoundCloudAutoSkipper.Debug("Skipper Created. Waiting for settings to be loaded.")
     }
@@ -93,10 +100,19 @@ class SoundCloudAutoSkipper {
         ExtentionContent.changeIcon("icon");
     }
     async startAutoSkipping() {
+        this.resetToRepeatPlaylist();
         this.#skippingActive= true;
         this.#newTimeout();
         ExtentionContent.changeIcon(this.playerControls.playerStatus === "playing" ? "active" : "pause")
         SoundCloudAutoSkipper.Debug("Starting Auto-Skipping...");
+    }
+
+    resetToRepeatPlaylist() {
+        while(this.playerControls.repeatType !== "playlist") {
+            console.log("clicked");
+            this.playerControls.repeatButton.click();
+        }
+        SoundCloudAutoSkipper.Debug("Ajusted the repeat settings to set it as 'repeat all'.")
     }
 
     destroy() {

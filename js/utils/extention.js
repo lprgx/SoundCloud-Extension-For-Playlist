@@ -14,13 +14,13 @@ class Extention {
         if(tabs) await Promise.all(
             tabs.map((tab) => chrome.tabs.sendMessage(tab.id, message))
         ).catch(() => {})
-        else await chrome.runtime.sendMessage(message).catch(() => {})
+        await chrome.runtime.sendMessage(message).catch(() => {})
 
         return message
     }
     /**
      * 
-     * @param {(message: ReturnType<Extention.message>) => any} handler 
+     * @param {(message: Awaited<ReturnType<Extention.message>>) => any} handler 
      */
     static onMessage(handler) {
         chrome.runtime.onMessage.addListener(m => handler(m))
