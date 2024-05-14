@@ -1,4 +1,3 @@
-
 class Extention {
     /**
      * @param {string} id
@@ -24,6 +23,14 @@ class Extention {
      */
     static onMessage(handler) {
         chrome.runtime.onMessage.addListener(m => handler(m))
+    }
+
+    /**
+     * @typedef {typeof import('../../manifest.json')} Schema
+     * @return {Schema}
+     */
+    static get manifest() {
+        return chrome.runtime.getManifest()
     }
 }
 

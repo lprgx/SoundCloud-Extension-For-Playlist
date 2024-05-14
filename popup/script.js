@@ -4,6 +4,7 @@ const autoStartInput = form.querySelector("input#autoStart");
 const timeoutInput = form.querySelector("input#skipTm");
 const randomnessInput = form.querySelector("input#randomness");
 const randomnessValue = document.querySelector(".currentRandomness");
+const versionValue = document.querySelector("#version");
 
 /**
  * 
@@ -30,6 +31,8 @@ async function syncFormWithSettings() {
     timeoutInput.value = settings.timeoutInSeconds
     randomnessInput.value = settings.randomnessInSeconds
     randomnessValue.innerText = randomnessInput.value
+
+    versionValue.innerText = ExtentionPopup.manifest.version
 
     isSync(true)
 }
