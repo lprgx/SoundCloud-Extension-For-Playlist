@@ -31,6 +31,7 @@ class SoundCloudAutoSkipper {
     #skippingWhenReachedSeconds = null;
     #timelineObserver;
     #playPauseObserver;
+    #adMode = false;
     constructor() {
         this.createPlayer();
         this.settings = null;
@@ -42,6 +43,21 @@ class SoundCloudAutoSkipper {
                 !this.#skippingActive
                 || typeof this.#skippingWhenReachedSeconds !== "number"
             ) return;
+
+            if(this.#adMode) {
+                if(!this.playerControls.isAdPlaying) {
+                    SoundCloudAutoSkipper.Debug("Ad finished. Stopping the 'Ad Mode'...")
+                    this.#adMode= false
+                    this.autoSetIcon();
+                }
+                return
+            }else if(this.playerControls.isAdPlaying) {
+                SoundCloudAutoSkipper.Debug("Ad detected. Setting the extension in 'Ad Mode'...")
+                this.#adMode= true
+                ExtentionContent.changeIcon("ad")
+                return
+            }
+
             if(this.playerControls.timeElapsed >= this.#skippingWhenReachedSeconds) {
                 this.playerControls.skipTrack()
                 SoundCloudAutoSkipper.Debug(`Track has been skipped after ${this.#skippingWhenReachedSeconds} seconds.`)
@@ -53,8 +69,10 @@ class SoundCloudAutoSkipper {
         });
 
         this.#playPauseObserver = new MutationObserver(() => {
-            if(!this.#skippingActive) return
-            ExtentionContent.changeIcon(this.playerControls.playerStatus === "playing" ? "active" : "pause")
+            if(
+                !this.#skippingActive
+            ) return
+            this.autoSetIcon();
         })
         this.#playPauseObserver.observe(this.playerControls.playPauseButton, {
             attributes: true
@@ -79,6 +97,7 @@ class SoundCloudAutoSkipper {
     async reloadSettings() {
         this.settings= await getSettings();
         SoundCloudAutoSkipper.Debug("Settings has been (re)loaded.")
+
         if(this.settings.enabled) await this.startAutoSkipping()
         else this.stopAutoSkipping()
     }
@@ -103,13 +122,29 @@ class SoundCloudAutoSkipper {
         this.resetToRepeatPlaylist();
         this.#skippingActive= true;
         this.#newTimeout();
-        ExtentionContent.changeIcon(this.playerControls.playerStatus === "playing" ? "active" : "pause")
+        this.autoSetIcon();
         SoundCloudAutoSkipper.Debug("Starting Auto-Skipping...");
     }
 
     resetToRepeatPlaylist() {
         while(this.playerControls.repeatType !== "playlist") this.playerControls.repeatButton.click();
         SoundCloudAutoSkipper.Debug("Ajusted the repeat settings to set it as 'repeat all'.")
+    }
+
+    /**
+     * @returns {Parameters<typeof ExtentionContent["changeIcon"]>[0]}
+     */
+    #getRequiredIcon() {
+        return (
+            this.settings.enabled && this.#skippingActive ? (
+                this.playerControls.playerStatus === "playing" ? (
+                    this.#adMode ? "ad" : "active"
+                ) : "pause"
+            ) : "icon"
+        )
+    }
+    autoSetIcon() {
+        return ExtentionContent.changeIcon(this.#getRequiredIcon());
     }
 
     destroy() {
@@ -120,10 +155,15 @@ class SoundCloudAutoSkipper {
     }
 }
 
-function createSkipper() {
+async function createSkipper() {
     if(Skipper) deleteSkipper();
     Skipper = new SoundCloudAutoSkipper();
-    return Skipper.reloadSettings();
+    await Skipper.reloadSettings();
+
+    if(Skipper.settings.autoPlayOnLaunch) {
+        SoundCloudAutoSkipper.Debug("Auto Playing is active. Playing will start automaticly...")
+        if(Skipper.playerControls.playerStatus === "paused") Skipper.playerControls.playPauseButton.click();
+    }
 }
 function deleteSkipper() {
     Skipper?.destroy();

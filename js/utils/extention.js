@@ -32,7 +32,7 @@ class ExtentionPopup extends Extention {
      * @param {Parameters<ExtentionWorker.changeIcon>[0]} icon 
      */
     static changeIcon(icon) {
-        return Extention.message("changeIcon", { icon }, "content")
+        return ExtentionPopup.message("changeIcon", { icon })
     }
 
     /**
@@ -63,7 +63,7 @@ class ExtentionContent extends Extention {
 
 class ExtentionWorker extends Extention {
     /**
-     * @param {"active" | "icon" | "pause"} icon 
+     * @param {"active" | "icon" | "pause" | "ad"} icon 
      */
     static changeIcon(icon) {
         chrome.action.setIcon({

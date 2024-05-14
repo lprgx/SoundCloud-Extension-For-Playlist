@@ -1,5 +1,6 @@
 const form = document.querySelector("form");
 const enabledInput = form.querySelector("input#active");
+const autoStartInput = form.querySelector("input#autoStart");
 const timeoutInput = form.querySelector("input#skipTm");
 const randomnessInput = form.querySelector("input#randomness");
 const randomnessValue = document.querySelector(".currentRandomness");
@@ -25,6 +26,7 @@ async function syncFormWithSettings() {
     const settings = await getSettings()
     
     enabledInput.checked = settings.enabled
+    autoStartInput.checked = settings.autoPlayOnLaunch
     timeoutInput.value = settings.timeoutInSeconds
     randomnessInput.value = settings.randomnessInSeconds
     randomnessValue.innerText = randomnessInput.value
@@ -48,6 +50,7 @@ form.addEventListener("input", () => {
      */
     const newSettings = {
         enabled: enabledInput.checked,
+        autoPlayOnLaunch: autoStartInput.checked,
         timeoutInSeconds, randomnessInSeconds
     }
     changeSettings(newSettings)
@@ -67,9 +70,6 @@ ExtentionPopup.onMessage((message) => {
             break;
         case "skippingStatusUpdate":
             changeState(data.active);
-            break;
-        case "changeIcon":
-            ExtentionPopup.changeIcon(data.icon);
             break;
         default:
             break;

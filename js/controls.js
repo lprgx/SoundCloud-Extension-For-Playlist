@@ -32,11 +32,22 @@ class Controls {
          * @type {HTMLDivElement}
          */
         this.timeline = player.querySelector(".playbackTimeline__progressWrapper")
+        /**
+         * @type {HTMLDivElement}
+         */
+        this.soungBadge = player.querySelector(".playbackSoundBadge")
+        /**
+         * @type {HTMLDivElement}
+         */
+        this.panel = player.querySelector(".playControls__panel")
 
         this.#player = player;
     }
     get timeElapsed() {
         return parseInt(this.timeline.getAttribute("aria-valuenow"))
+    }
+    get maxTime() {
+        return parseInt(this.timeline.getAttribute("aria-valuemax"))
     }
     get playerStatus() {
         return this.playPauseButton.classList.contains("playing") ? "playing" : "paused"
@@ -46,6 +57,9 @@ class Controls {
             this.repeatButton.classList.contains("m-none") ? "none" :
             this.repeatButton.classList.contains("m-one") ? "song" : "playlist"
         )
+    }
+    get isAdPlaying() {
+        return this.soungBadge.classList.contains("is-adPlaying");
     }
     skipTrack() {
         this.skippingButton.click()
