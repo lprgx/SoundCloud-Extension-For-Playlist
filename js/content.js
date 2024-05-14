@@ -183,7 +183,7 @@ const observer = new MutationObserver((records) => {
     for(const record of records) {
         if(
             Array.from(record.removedNodes)
-            .find(isElementPlayControls)
+            .find(Controls.isPlayerElement)
             || !isUserLoginIn()
         ) deleteSkipper();
         
