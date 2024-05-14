@@ -30,6 +30,7 @@ class SoundCloudAutoSkipper {
      */
     #skippingWhenReachedSeconds = null;
     #timelineObserver;
+    #playPauseObserver;
     #adMode = false;
     constructor() {
         this.createPlayer();
@@ -67,7 +68,11 @@ class SoundCloudAutoSkipper {
             attributes: true
         });
 
-        this.playerControls.playPauseButton.addEventListener("click", () => this.autoSetIcon())
+        this.#playPauseObserver = new MutationObserver(() => this.autoSetIcon());
+        this.#playPauseObserver.observe(this.playerControls.playPauseButton, {
+            attributes: true
+        })
+
         this.playerControls.repeatButton.addEventListener("click", (ev) => {
             if(
                 ev.isTrusted
@@ -140,6 +145,7 @@ class SoundCloudAutoSkipper {
 
     destroy() {
         this.#timelineObserver.disconnect()
+        this.#playPauseObserver.disconnect()
         delete this;
         SoundCloudAutoSkipper.Debug("An instance of Auto-Skipper has been destroyed.")
     }
@@ -153,6 +159,10 @@ async function createSkipper() {
     if(Skipper.settings.autoPlayOnLaunch) {
         SoundCloudAutoSkipper.Debug("Auto Playing is active. Playing will start automaticly...")
         if(Skipper.playerControls.playerStatus !== "playing") Skipper.playerControls.playPauseButton.click()
+        // Sometimes soundcloud blocks the extension for auto starting playing after few seconds...
+        setTimeout(() => {
+            Skipper.autoSetIcon()
+        }, 1500);
     }
 }
 function deleteSkipper() {

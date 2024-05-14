@@ -77,7 +77,7 @@ label {
     cursor: pointer;
 }
 input[type="range"] {
-    cursor: e-resize;
+    cursor: ew-resize;
 }
 
 button {
