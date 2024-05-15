@@ -207,4 +207,6 @@ observer.observe(document.getElementById("app"), {childList: true});
 window.addEventListener("beforeunload", () => {
     deleteSkipper();
 })
-if(isUserLoginIn()) tryCreateSkipper()
+window.addEventListener("load", () => {
+    if(isUserLoginIn()) tryCreateSkipper()
+})
