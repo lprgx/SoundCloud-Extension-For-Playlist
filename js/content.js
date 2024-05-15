@@ -32,11 +32,13 @@ class SoundCloudAutoSkipper {
     #timelineObserver;
     #playPauseObserver;
     #adMode = false;
-    constructor() {
-        this.createPlayer();
+    /**
+     * @param {HTMLDivElement} player 
+     */
+    constructor(player) {
+        if(Controls.isPlayerElement(player)) this.playerControls = new Controls(player)
+        else throw new Error("Invalid player given.");
         this.settings = null;
-
-        if(!this.playerControls) throw new Error("Controls has not been found.");
         
         this.#timelineObserver = new MutationObserver(() => {
             if(
@@ -82,13 +84,6 @@ class SoundCloudAutoSkipper {
         })
 
         SoundCloudAutoSkipper.Debug("Skipper Created. Waiting for settings to be loaded.")
-    }
-
-    createPlayer() {
-        if(this.playerControls) return
-        const element = document.querySelector(".playControls.m-visible")
-        if(Controls.isPlayerElement(element)) this.playerControls = new Controls(element)
-        return this.playerControls
     }
     async reloadSettings() {
         this.settings= await getSettings();
@@ -151,18 +146,20 @@ class SoundCloudAutoSkipper {
     }
 }
 
-async function createSkipper() {
+/**
+ * 
+ * @param {HTMLDivElement?} player 
+ */
+async function createSkipper(player) {
     if(Skipper) deleteSkipper();
-    Skipper = new SoundCloudAutoSkipper();
+    Skipper = new SoundCloudAutoSkipper(
+        player ?? document.querySelector(".playControls.m-visible")
+    );
     await Skipper.reloadSettings();
 
     if(Skipper.settings.autoPlayOnLaunch) {
         SoundCloudAutoSkipper.Debug("Auto Playing is active. Playing will start automaticly...")
         if(Skipper.playerControls.playerStatus !== "playing") Skipper.playerControls.playPauseButton.click()
-        // Sometimes soundcloud blocks the extension for auto starting playing after few seconds...
-        setTimeout(() => {
-            Skipper.autoSetIcon()
-        }, 1500);
     }
 }
 function deleteSkipper() {
@@ -171,11 +168,12 @@ function deleteSkipper() {
     ExtentionContent.changeIcon("icon");
     SoundCloudAutoSkipper.Debug("Auto-Skipper has been disabled.")
 }
-function tryCreateSkipper() {
+/**
+ * @param {Parameters<typeof createSkipper>[0]} player
+ */
+function tryCreateSkipper(player) {
     if(!isUserLoginIn()) return deleteSkipper() || null;
-    
-    try { createSkipper().then(() => {}) } 
-    catch (e) { deleteSkipper() }
+    createSkipper(player).then(() => {}).catch(() => deleteSkipper())
     return Skipper
 }
 
@@ -188,7 +186,7 @@ const observer = new MutationObserver((records) => {
         ) deleteSkipper();
         
         const playerAdded = Array.from(record.addedNodes).find(Controls.isPlayerElement);
-        if(playerAdded) tryCreateSkipper()
+        if(playerAdded) tryCreateSkipper(playerAdded)
     }
 })
 
