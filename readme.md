@@ -6,7 +6,7 @@
 
 __ATTENTION__: Avant d'installer l'extension, vérifiez que vous ne l'avez pas déjà installé. Et si c'est le cas, supprimez la version déjà installé de vos extension.
 
-1. En haut à droite de ce repo Github, cliquez sur le bouton vert (annoté `Code`), puis cliquez sur `Download` (ou `Télécharger`)
+1. En haut à droite de ce repo Github, cliquez sur le bouton vert (annoté `Code`), puis cliquez sur `Download ZIP` (ou `Télécharger ZIP`)
 2. Dézippez le fichier que vous venez de télécharger
    * Sur Mac, double cliquez sur le fichier dans le Finder
    * Sur Windows, faites click-droit, `Extraire tout...` puis dans la fenètre qui s'est ouverte appuyez sur `Extraire`
